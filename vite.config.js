@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './', // Ensures compatible paths for github pages deployments
+  base: '/',
   server: {
     port: 3000
   },
