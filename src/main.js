@@ -1,21 +1,43 @@
 import './styles/global.css';
-import { getCurrentSession, getCurrentProfile } from './services/auth.js';
+import { router } from './router/router.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const session = await getCurrentSession();
-    if (session) {
-      const profile = await getCurrentProfile();
-      const navActions = document.querySelector('.nav-actions');
-      if (navActions && profile) {
-        const targetUrl = profile.role === 'admin' ? '/src/pages/admin/admin.html' : '/src/pages/dashboard/dashboard.html';
-        const label = profile.role === 'admin' ? 'Admin Dashboard' : 'My Dashboard';
-        navActions.innerHTML = `
-          <a href="${targetUrl}" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">${label} →</a>
-        `;
-      }
-    }
-  } catch (e) {
-    console.log('Landing page initialized.');
-  }
+// Register SPA Routes
+router.addRoute('/', () => import('./views/HomeView.js'));
+
+router.addRoute('/login', () => import('./views/LoginView.js'), {
+  meta: { guestOnly: true }
+});
+
+router.addRoute('/dashboard', () => import('./views/DashboardView.js'), {
+  meta: { requiresAuth: true, roles: ['student', 'admin'] }
+});
+
+router.addRoute('/lesson', () => import('./views/LessonView.js'), {
+  meta: { requiresAuth: true, roles: ['student', 'admin'] }
+});
+
+router.addRoute('/lesson/:module/:lesson', () => import('./views/LessonView.js'), {
+  meta: { requiresAuth: true, roles: ['student', 'admin'] }
+});
+
+router.addRoute('/profile', () => import('./views/ProfileView.js'), {
+  meta: { requiresAuth: true, roles: ['student', 'admin'] }
+});
+
+router.addRoute('/change-password', () => import('./views/ChangePasswordView.js'), {
+  meta: { requiresAuth: true, roles: ['student', 'admin'] }
+});
+
+router.addRoute('/reset-password', () => import('./views/ResetPasswordView.js'));
+
+router.addRoute('/admin', () => import('./views/AdminView.js'), {
+  meta: { requiresAuth: true, roles: ['admin'] }
+});
+
+router.addRoute('/not-found', () => import('./views/NotFoundView.js'));
+router.addRoute('*', () => import('./views/NotFoundView.js'));
+
+// Initialize Client-Side SPA Router on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  router.init('#app');
 });

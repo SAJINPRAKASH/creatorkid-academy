@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { router } from '../router/router.js';
 
 /**
  * Log in student or administrator with Email and Password.
@@ -26,14 +27,14 @@ export async function logout() {
   if (error) {
     console.error('Error signing out:', error.message);
   }
-  window.location.href = '/src/pages/login/login.html';
+  router.navigate('/login');
 }
 
 /**
  * Send password reset recovery email.
  */
 export async function requestPasswordReset(email) {
-  const redirectTo = `${window.location.origin}/src/pages/reset-password/reset-password.html`;
+  const redirectTo = `${window.location.origin}/reset-password`;
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo,
   });
@@ -111,16 +112,16 @@ export async function getCurrentProfile() {
 export async function requireAuth(allowedRoles = ['student', 'admin']) {
   const session = await getCurrentSession();
   if (!session) {
-    window.location.href = '/src/pages/login/login.html';
+    router.navigate('/login');
     return null;
   }
 
   const profile = await getCurrentProfile();
   if (!profile || !allowedRoles.includes(profile.role)) {
     if (profile && profile.role === 'admin') {
-      window.location.href = '/src/pages/admin/admin.html';
+      router.navigate('/admin');
     } else {
-      window.location.href = '/src/pages/dashboard/dashboard.html';
+      router.navigate('/dashboard');
     }
     return null;
   }
@@ -136,9 +137,9 @@ export async function redirectIfAuthenticated() {
   if (session) {
     const profile = await getCurrentProfile();
     if (profile && profile.role === 'admin') {
-      window.location.href = '/src/pages/admin/admin.html';
+      router.navigate('/admin');
     } else {
-      window.location.href = '/src/pages/dashboard/dashboard.html';
+      router.navigate('/dashboard');
     }
   }
 }

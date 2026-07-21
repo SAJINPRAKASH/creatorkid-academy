@@ -139,7 +139,6 @@ html, body {
   min-height: 0;
 }
 
-/* Custom Scrollbar for Curriculum */
 .accordion-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -189,6 +188,9 @@ html, body {
   cursor: pointer;
   transition: all var(--transition-fast);
   border-bottom: 1px solid rgba(255,255,255,0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .lesson-item:hover {
@@ -203,7 +205,6 @@ html, body {
   font-weight: 500;
 }
 
-/* Speed Controls & Video Info Header */
 .video-info-header {
   display: flex;
   justify-content: space-between;
@@ -243,7 +244,6 @@ html, body {
   color: var(--color-text);
 }
 
-/* Lesson Resources (Phase 12) */
 .lesson-resources {
   margin-top: 1.25rem;
   padding-top: 1rem;
@@ -324,13 +324,6 @@ html, body {
 .nav-step-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-}
-
-/* Sidebar Lesson Item Checkmarks */
-.lesson-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .checkmark {

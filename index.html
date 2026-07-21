@@ -7,118 +7,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+      // Restore URL if redirected from GitHub Pages 404.html
+      (function() {
+        var redirect = window.location.search.match(/[?&]p=([^&]*)/);
+        if (redirect && redirect[1]) {
+          var decoded = decodeURIComponent(redirect[1]).replace(/~and~/g, '&');
+          var search = window.location.search.replace(/([?&])p=[^&]*(&?)/, '$1').replace(/&$/, '').replace(/\?$/, '');
+          var hash = window.location.hash;
+          window.history.replaceState(null, null, decoded + search + hash);
+        }
+      })();
+    </script>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="container">
-        <a href="/" class="logo">
-          <img src="/src/assets/logo/logo.png" alt="CreatorKid Academy" class="nav-logo" />
-        </a>
-        <div class="nav-links">
-          <a href="/" class="active" style="color: var(--color-primary);">The Course</a>
-        </div>
-        <div class="nav-actions">
-          <a href="/src/pages/login/login.html" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">Login</a>
-        </div>
-        <button class="mobile-menu-btn">☰</button>
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main>
-      <!-- Hero Section -->
-      <section class="hero items-center justify-center flex-col text-center" style="min-height: 70vh; display: flex; position: relative; overflow: hidden;">
-        <div class="container animate-slide-up" style="position: relative; z-index: 10;">
-          <div class="badge" style="display: inline-block; padding: 4px 14px; background: rgba(124, 58, 237, 0.15); border-radius: 20px; color: var(--color-primary); margin-bottom: 1.5rem; font-weight: 600; border: 1px solid rgba(124, 58, 237, 0.4); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Signature Course Available</div>
-          <h1 class="text-gradient" style="max-width: 800px; margin: 0 auto; margin-bottom: 24px; font-size: clamp(2.5rem, 6vw, 4.5rem);">Master Photoshop.<br/>Unleash Creativity.</h1>
-          <p style="font-size: 1.15rem; max-width: 600px; margin: 0 auto 2.5rem; color: var(--color-text-muted);">The ultimate Photoshop course designed specifically for the next generation of digital artists. Bring your boldest ideas to life.</p>
-          <div class="flex justify-center flex-wrap" style="gap: var(--spacing-md); margin-top: var(--spacing-lg);">
-            <a href="/src/pages/login/login.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); text-decoration: none;">Student Login</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Featured Course Section -->
-      <section class="courses">
-        <div class="container">
-           <div class="featured-card animate-slide-up">
-              <div>
-                <img src="/src/assets/images/photoshop-course.png" alt="Photoshop Masterclass" class="card-image" style="height: auto; width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);" />
-              </div>
-              <div>
-                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Photoshop Masterclass</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--color-text-muted);">Go from absolute beginner to digital artist. Learn layers, masking, compositing, typography, and advanced retouching techniques in this comprehensive 6-week journey.</p>
-                <ul style="list-style: none; margin-bottom: 2.5rem; color: var(--color-text);">
-                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> 40+ HD Video Lessons</li>
-                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Downloadable Project Files</li>
-                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Certificate of Completion</li>
-                  <li style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Lifetime Access</li>
-                </ul>
-                <div class="flex wrap" style="gap: 1.5rem; align-items: center;">
-                  <a href="https://wa.me/919074894575?text=Hi!%20I%20would%20like%20to%20enroll%20in%20the%20Photoshop%20Masterclass." target="_blank" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-size: 1rem;">
-                    Enroll Now - ₹1999 <span style="text-decoration: line-through; opacity: 0.7; font-size: 0.85em; margin-left: 0.5rem; font-weight: 400;">₹5999</span>
-                  </a>
-                  <span style="color: var(--color-text-muted); font-size: 0.95rem; font-weight: 500;">★★★★★ 4.9 (120+ reviews)</span>
-                </div>
-              </div>
-           </div>
-        </div>
-      </section>
-
-      <!-- Syllabus Preview -->
-      <section class="features" style="background-color: rgba(18, 24, 38, 0.5); margin-top: 2rem; padding: 5rem 0;">
-        <div class="container">
-          <h2 class="text-center" style="margin-bottom: var(--spacing-2xl); font-size: 2.25rem;">What You Will Build</h2>
-          <div class="grid md:grid-cols-3">
-            <div class="card" style="background: var(--color-bg); border-top: 4px solid var(--color-primary);">
-              <h3 style="color: var(--color-text); margin-bottom: 1rem; font-size: 1.4rem;">Module 1: The Basics</h3>
-              <p style="color: var(--color-text-muted); line-height: 1.7;">Master the interface, selection tools, and the power of non-destructive layer workflows.</p>
-            </div>
-            <div class="card" style="background: var(--color-bg); border-top: 4px solid var(--color-secondary);">
-              <h3 style="color: var(--color-text); margin-bottom: 1rem; font-size: 1.4rem;">Module 2: Typography & Layout</h3>
-              <p style="color: var(--color-text-muted); line-height: 1.7;">Learn to pair fonts, establish visual hierarchy, and design stunning posters and thumbnails.</p>
-            </div>
-            <div class="card" style="background: var(--color-bg); border-top: 4px solid var(--color-accent);">
-              <h3 style="color: var(--color-text); margin-bottom: 1rem; font-size: 1.4rem;">Module 3: Compositing</h3>
-              <p style="color: var(--color-text-muted); line-height: 1.7;">Blend multiple images seamlessly using advanced masking and lighting techniques.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-col">
-            <img src="/src/assets/logo/logo.png" alt="CreatorKid Academy" class="nav-logo" style="margin-bottom: var(--spacing-md);" />
-            <p>Empowering the next generation of digital creators.</p>
-          </div>
-          <div class="footer-col">
-            <h4>Platform</h4>
-            <ul>
-              <li><a href="#">The Course</a></li>
-              <li><a href="#">Pricing</a></li>
-              <li><a href="#">Testimonials</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>Support</h4>
-            <ul>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2026 CreatorKid Academy. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-
+    <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
