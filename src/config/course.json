@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "title": "Basic",
+    "folder": "Basic",
+    "videos": [
+      "0 Photoshop Introduction and Interface.mp4",
+      "1 make project and some main tools.mp4",
+      "2 Import Image in Photoshop.mp4",
+      "3 layer panel and alignmet.mp4",
+      "4 organising and linking.mp4",
+      "5 layer style and adjustment layer.mp4",
+      "6 layer mask.mp4",
+      "7 Photoshop Basic Selection Tool Rerecord.mp4",
+      "8 Photoshop Advanced Selection Rerecord.mp4",
+      "9 Colour selection.mp4",
+      "10 Photoshop Lasso Tool.mp4",
+      "11 Photoshop Marquee Tool.mp4",
+      "12 quick remove tool.mp4",
+      "13crop tool.mp4",
+      "14 colour grading.mp4",
+      "15 dodge and burn.mp4",
+      "16 Photoshop Shapes.mp4",
+      "17custom shape using pen tool.mp4",
+      "18 text tool.mp4",
+      "19 Photoshop warp text and custom style.mp4",
+      "20 Photoshop layer style.mp4",
+      "21 Photoshop Other Layer Styles.mp4",
+      "22 Remove blemishes.mp4",
+      "23 skin smoothening.mp4",
+      "24 dodge and burn in face.mp4",
+      "25 Eye editing.mp4",
+      "26 Remove Eye bags.mp4",
+      "27 Lip colour.mp4",
+      "28 Photoshop Liquify Rerecord.mp4",
+      "29 Photoshop Blends Modes.mp4",
+      "30 Photoshop Remove Background with blend mode.mp4",
+      "31 Photoshop Smart filters.mp4",
+      "32 Export Image.mp4",
+      "33 Photoshop Advanced Preferences.mp4",
+      "34 Photoshop Tips.mp4",
+      "35 Photoshop Speed Tips.mp4",
+      "36 Photoshop Visiting Card Project.mp4"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Camera Raw Basics",
+    "folder": "2 camera raw",
+    "videos": [
+      "1 Class 01 Interface, Importing Image.mp4",
+      "2 Class 02 - Move Tool, Layer Panel.mp4",
+      "3 Class 03 - Text Tool.mp4",
+      "Class 04 - Shape Tool.mp4",
+      "Class 05 - Selection Tools.mp4",
+      "Class 06 - Masking.mp4",
+      "Class 07 - Project 01.mp4",
+      "Class 08 - Clipping Mask.mp4",
+      "Class 09 - Clipping Mask Project.mp4",
+      "Class 10 - Blending Modes.mp4",
+      "Class 11 - Retouching & Cleanup.mp4",
+      "Class 12 - Crop Tool, Filters, Blur Effects.mp4",
+      "Class 13 - Vanishing Point, 3D Logic.mp4",
+      "Class 14 - Layer Types, Layer Panel & Layer styles.mp4"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Advanced Retouching",
+    "folder": "3 advanced retouching",
+    "videos": [
+      "1 Removing Blemishes & Eye Bags 01.mp4",
+      "2 Color Correction Using Curves.mp4",
+      "3 Color Correction Using Color Samples.mp4",
+      "4 Fixing Over Color Issues 01.mp4",
+      "5 Frequency Seperation.mp4",
+      "6 Skin Retouching with Plugins.mp4",
+      "7 Skin Retouching with Portraiture 4.mp4",
+      "8 Dodging and Burning.mp4",
+      "9 Retouching Eyes.mp4",
+      "10 Retouching teeth.mp4",
+      "11 Retouching Lips.mp4"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Camera Raw Retouching",
+    "folder": "4 cameraraw retouching",
+    "videos": [
+      "1 Camera Raw & Retouching Workflow I.mp4",
+      "2 Camera Raw & Retouching Workflow II.mp4",
+      "3 Creative Color Grading & Matching Tricks I.mp4"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Mastering Coloring",
+    "folder": "5 mastering coloring",
+    "videos": [
+      "1 Mastering Curves Adjustment I.mp4",
+      "2 Mastering Curves Adjustment II.mp4",
+      "3 Hue Saturation in Detail I.mp4",
+      "4 Hue Saturation in Detail II.mp4",
+      "5 Fill Adjustment Layers I.mp4",
+      "6 Fill Adjustment Layers II.mp4",
+      "7 Color Lookup.mp4",
+      "8 Gradient Maps.mp4",
+      "9Selective Color.mp4"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Advanced Compositing",
+    "folder": "6 advanced compositing",
+    "videos": [
+      "1 What is Compositing 01.mp4",
+      "2 Layer Mask.mp4",
+      "3 Advanced Masking Part 01.mp4",
+      "4 Advanced Masking Part 02.mp4",
+      "5 Introduction to Matching & Background Image.mp4",
+      "6 Matching Perspectives - part 1.mp4",
+      "7 Matching Perspectives - part 2.mp4",
+      "8 Creating Shadows part 01.mp4",
+      "9Creating Shadows part 02.mp4",
+      "10 Creating Shadows part 03.mp4",
+      "11 Creating Shadows part 04.mp4",
+      "12 Matching Lights & Color.mp4",
+      "13 Matching Depths.mp4",
+      "14 Adding Extra Lights part 1.mp4",
+      "15 Adding Extra Lights part 2.mp4"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Camera Raw Advanced Workflow",
+    "folder": "7 camera raw",
+    "videos": [
+      "1 What is A RAW Image.mp4",
+      "2 Camera Raw -  Edit Tab.mp4",
+      "3 Crop & Healing Brush Tool.mp4",
+      "4 Masking & Other tools.mp4",
+      "5 Project 01 - Creating a Color Graded Image using Camera Raw.mp4"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Bonus",
+    "folder": "8 bonus",
+    "videos": [
+      "How to type Malayalam in Photoshop.mp4",
+      "Passport Size Photo Editing.mp4"
+    ]
+  }
+]
