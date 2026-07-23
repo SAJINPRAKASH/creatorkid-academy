@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   email TEXT NOT NULL UNIQUE,
   role TEXT NOT NULL DEFAULT 'student' CHECK (role IN ('admin', 'student')),
   avatar_url TEXT,
+  status TEXT NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Pending', 'Suspended')),
+  courses TEXT[] NOT NULL DEFAULT '{Photoshop Masterclass}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -112,6 +114,12 @@ CREATE POLICY "Admins can insert profiles"
   TO authenticated
   WITH CHECK (public.is_admin() OR auth.uid() = id);
 
+DROP POLICY IF EXISTS "Admins can delete profiles" ON public.profiles;
+CREATE POLICY "Admins can delete profiles"
+  ON public.profiles FOR DELETE
+  TO authenticated
+  USING (public.is_admin());
+
 -- --------------------------------------------------------
 -- PROGRESS RLS Policies
 -- --------------------------------------------------------
@@ -157,3 +165,15 @@ VALUES
   ('Welcome to Photoshop Masterclass! 🎨', 'We are excited to have you on board. Please start with Module 1: Photoshop Introduction.', TRUE),
   ('New Lesson Content Released 🚀', 'Check out the updated tutorials on selection tools and advanced layer masks!', FALSE)
 ON CONFLICT DO NOTHING;
+
+-- ========================================================
+-- Schema Migration (Execute this if tables already exist)
+-- ========================================================
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Pending', 'Suspended'));
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS courses TEXT[] NOT NULL DEFAULT '{Photoshop Masterclass}';
+
+DROP POLICY IF EXISTS "Admins can delete profiles" ON public.profiles;
+CREATE POLICY "Admins can delete profiles"
+  ON public.profiles FOR DELETE
+  TO authenticated
+  USING (public.is_admin());

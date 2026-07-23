@@ -1,10 +1,8 @@
-import { loginWithEmail, redirectIfAuthenticated } from '../services/auth.js';
+import { loginWithEmail } from '../services/auth.js';
 import logoImg from '../assets/logo/logo.png';
 import '../styles/login.css';
 
 export async function render(container, { router }) {
-  // If already authenticated, redirect immediately
-  await redirectIfAuthenticated();
 
   container.innerHTML = `
     <div class="login-wrapper">

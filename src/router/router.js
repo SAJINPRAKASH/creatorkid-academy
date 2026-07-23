@@ -124,7 +124,22 @@ class Router {
     }
 
     // Check Authentication & Role Guards
-    const authGuardPassed = await this.checkAuthGuard(matchedRoute.meta);
+    let authGuardPassed = false;
+    try {
+      authGuardPassed = await this.checkAuthGuard(matchedRoute.meta);
+    } catch (err) {
+      console.error('Auth guard verification failed:', err);
+      this.isNavigating = false;
+      this.appContainer.innerHTML = `
+        <div style="padding: 3rem; text-align: center; color: var(--color-text); background: var(--color-card); border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.05); max-width: 500px; margin: 4rem auto;">
+          <h2 style="color: #fca5a5;">Authentication Error</h2>
+          <p style="color: var(--color-text-muted); margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.5;">${escapeHtml(err.message || 'An error occurred while verifying your session.')}</p>
+          <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.5rem; padding: 10px 20px;">Reload Application</button>
+        </div>
+      `;
+      return;
+    }
+
     if (!authGuardPassed) {
       this.isNavigating = false;
       return;
@@ -182,6 +197,7 @@ class Router {
     if (meta.guestOnly) {
       if (session) {
         const profile = await getCurrentProfile();
+        this.isNavigating = false; // Release lock before nested navigation
         if (profile && profile.role === 'admin') {
           this.navigate('/admin', true);
         } else {
@@ -194,6 +210,7 @@ class Router {
 
     if (meta.requiresAuth) {
       if (!session) {
+        this.isNavigating = false; // Release lock before nested navigation
         this.navigate('/login', true);
         return false;
       }
@@ -201,6 +218,7 @@ class Router {
       const profile = await getCurrentProfile();
       if (meta.roles && meta.roles.length > 0) {
         if (!profile || !meta.roles.includes(profile.role)) {
+          this.isNavigating = false; // Release lock before nested navigation
           if (profile && profile.role === 'admin') {
             this.navigate('/admin', true);
           } else {
@@ -216,3 +234,12 @@ class Router {
 }
 
 export const router = new Router();
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

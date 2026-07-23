@@ -2,9 +2,9 @@
   {
     "id": 1,
     "title": "Basic",
-    "folder": "Basic",
+    "folder": "basic",
     "videos": [
-      "0 Photoshop Introduction And Interface.mp4",
+      "0 Photoshop Introduction and Interface.mp4",
       "1 make project and some main tools.mp4",
       "2 Import Image in Photoshop.mp4",
       "3 layer panel and alignmet.mp4",
@@ -67,7 +67,7 @@
   {
     "id": 3,
     "title": "Advanced Retouching",
-    "folder": "3 advanced retouching",
+    "folder": "3 retouching",
     "videos": [
       "1 Removing Blemishes & Eye Bags 01.mp4",
       "2 Color Correction Using Curves.mp4",
@@ -85,7 +85,7 @@
   {
     "id": 4,
     "title": "Camera Raw Retouching",
-    "folder": "4 cameraraw retouching",
+    "folder": "4 camara raw and retouching",
     "videos": [
       "1 Camera Raw & Retouching Workflow I.mp4",
       "2 Camera Raw & Retouching Workflow II.mp4",
@@ -95,7 +95,7 @@
   {
     "id": 5,
     "title": "Mastering Coloring",
-    "folder": "5 mastering coloring",
+    "folder": "5 Mastreing Color",
     "videos": [
       "1 Mastering Curves Adjustment I.mp4",
       "2 Mastering Curves Adjustment II.mp4",
@@ -111,7 +111,7 @@
   {
     "id": 6,
     "title": "Advanced Compositing",
-    "folder": "6 advanced compositing",
+    "folder": "6 Advance copositing",
     "videos": [
       "1 What is Compositing 01.mp4",
       "2 Layer Mask.mp4",
@@ -133,7 +133,7 @@
   {
     "id": 7,
     "title": "Camera Raw Advanced Workflow",
-    "folder": "7 camera raw",
+    "folder": "8 Camara raw",
     "videos": [
       "1 What is A RAW Image.mp4",
       "2 Camera Raw -  Edit Tab.mp4",
@@ -145,7 +145,7 @@
   {
     "id": 8,
     "title": "Bonus",
-    "folder": "8 bonus",
+    "folder": "7 bonus",
     "videos": [
       "How to type Malayalam in Photoshop.mp4",
       "Passport Size Photo Editing.mp4"

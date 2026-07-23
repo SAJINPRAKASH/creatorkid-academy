@@ -1,8 +1,24 @@
-import { requireAuth, logout } from '../services/auth.js';
-import { getAllProfiles } from '../services/profile.js';
+import { createClient } from '@supabase/supabase-js';
+import { requireAuth, logout, getCurrentUser } from '../services/auth.js';
+import { getAllProfiles, updateProfile } from '../services/profile.js';
+import { supabase } from '../services/supabase.js';
 import { getAnnouncements, createAnnouncement } from '../services/announcement.js';
 import logoImg from '../assets/logo/logo.png';
 import '../styles/admin.css';
+
+// Initialize a secondary, temporary client that does not persist session storage.
+// This allows the admin to register new users in Supabase Auth without logging the admin out.
+const tempSupabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key',
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
+);
 
 export async function render(container, { router }) {
   const auth = await requireAuth(['admin']);
@@ -155,6 +171,13 @@ export async function render(container, { router }) {
               </div>
             </div>
 
+            <div class="form-row" id="password-form-row">
+              <div class="form-group" style="grid-column: span 2;">
+                <label for="student-password">Initial Password *</label>
+                <input type="text" id="student-password" placeholder="Min 6 characters, e.g. 123456" />
+              </div>
+            </div>
+
             <div class="form-group">
               <label>Assign Selected Courses *</label>
               <div class="courses-checkbox-grid">
@@ -291,7 +314,7 @@ export async function render(container, { router }) {
 
     const filtered = students.filter(s => {
       const matchesSearch = (s.full_name || s.name || '').toLowerCase().includes(query) || (s.email || '').toLowerCase().includes(query);
-      const matchesCourse = selectedCourse === 'ALL' || (s.courses && s.courses.includes(selectedCourse)) || selectedCourse === 'Photoshop Masterclass';
+      const matchesCourse = selectedCourse === 'ALL' || (s.courses && s.courses.includes(selectedCourse));
       const matchesStatus = selectedStatus === 'ALL' || (s.status || 'Active') === selectedStatus;
       return matchesSearch && matchesCourse && matchesStatus;
     });
@@ -323,16 +346,17 @@ export async function render(container, { router }) {
         <td><span class="badge-role">${(s.role || 'student').toUpperCase()}</span></td>
         <td>
           <div class="course-badges">
-            <span class="badge-course">Photoshop Masterclass</span>
+            ${(s.courses || ['Photoshop Masterclass']).map(c => `<span class="badge-course">${escapeHtml(c)}</span>`).join('')}
           </div>
         </td>
         <td style="color: var(--color-text-muted);">${s.created_at ? s.created_at.split('T')[0] : 'Recent'}</td>
         <td>
-          <span class="badge-status status-active">${s.status || 'Active'}</span>
+          <span class="badge-status status-${(s.status || 'Active').toLowerCase()}">${s.status || 'Active'}</span>
         </td>
         <td style="text-align: right;">
           <div class="action-btns">
             <button class="btn-icon edit-btn" data-id="${s.id}">✏️ Edit</button>
+            <button class="btn-icon btn-danger delete-btn" data-id="${s.id}" style="color: #fca5a5; border-color: rgba(239, 68, 68, 0.2);">🗑️ Delete</button>
           </div>
         </td>
       `;
@@ -345,18 +369,141 @@ export async function render(container, { router }) {
   courseFilter.addEventListener('change', renderTable);
   statusFilter.addEventListener('change', renderTable);
 
+  const openEditModal = (student) => {
+    studentForm.reset();
+    container.querySelector('#modal-title').textContent = 'Edit Student Profile';
+    container.querySelector('#student-id').value = student.id;
+    container.querySelector('#student-name').value = student.full_name || '';
+    container.querySelector('#student-email').value = student.email || '';
+    container.querySelector('#student-email').disabled = true; // Email cannot be changed
+    container.querySelector('#student-status').value = student.status || 'Active';
+
+    // Set course checkboxes
+    const assignedCourses = student.courses || ['Photoshop Masterclass'];
+    const checkboxes = container.querySelectorAll('input[name="courses"]');
+    checkboxes.forEach(cb => {
+      cb.checked = assignedCourses.includes(cb.value);
+    });
+
+    container.querySelector('#password-form-row').style.display = 'none';
+    container.querySelector('#student-password').required = false;
+    container.querySelector('#student-password').value = '';
+    studentModal.style.display = 'flex';
+  };
+
   addStudentBtn.addEventListener('click', () => {
     studentForm.reset();
+    container.querySelector('#modal-title').textContent = 'Add New Student';
+    container.querySelector('#student-id').value = '';
+    container.querySelector('#student-email').disabled = false;
+    container.querySelector('#student-status').value = 'Active';
+    container.querySelector('#password-form-row').style.display = 'grid';
+    container.querySelector('#student-password').required = true;
+    container.querySelector('#student-password').value = '';
+    const checkboxes = container.querySelectorAll('input[name="courses"]');
+    checkboxes.forEach(cb => {
+      cb.checked = cb.value === 'Photoshop Masterclass';
+    });
     studentModal.style.display = 'flex';
   });
+
   modalClose.addEventListener('click', () => studentModal.style.display = 'none');
   modalCancelBtn.addEventListener('click', () => studentModal.style.display = 'none');
 
+  // Delegated edit/delete click listener
+  studentsTableBody.addEventListener('click', async (e) => {
+    const editBtn = e.target.closest('.edit-btn');
+    if (editBtn) {
+      const studentId = editBtn.dataset.id;
+      const student = students.find(s => s.id === studentId);
+      if (student) {
+        openEditModal(student);
+      }
+    }
+
+    const deleteBtn = e.target.closest('.delete-btn');
+    if (deleteBtn) {
+      const studentId = deleteBtn.dataset.id;
+      const student = students.find(s => s.id === studentId);
+      if (student) {
+        const currentUser = await getCurrentUser();
+        if (currentUser && currentUser.id === studentId) {
+          alert('You cannot delete your own admin account.');
+          return;
+        }
+
+        if (confirm(`Are you sure you want to delete student "${student.full_name}"? This will permanently remove their profile record.`)) {
+          try {
+            const { error } = await supabase
+              .from('profiles')
+              .delete()
+              .eq('id', studentId);
+            if (error) throw error;
+            alert('Student profile deleted successfully.');
+            await loadStudents();
+          } catch (err) {
+            alert('Error deleting student: ' + err.message);
+          }
+        }
+      }
+    }
+  });
+
   studentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('Student profile saved.');
-    studentModal.style.display = 'none';
-    await loadStudents();
+    const id = container.querySelector('#student-id').value;
+    const name = container.querySelector('#student-name').value.trim();
+    const email = container.querySelector('#student-email').value.trim();
+    const status = container.querySelector('#student-status').value;
+    const checkboxes = container.querySelectorAll('input[name="courses"]:checked');
+    const assignedCourses = Array.from(checkboxes).map(cb => cb.value);
+
+    try {
+      if (id) {
+        // Edit mode
+        await updateProfile(id, {
+          full_name: name,
+          status: status,
+          courses: assignedCourses
+        });
+        alert('Student profile updated successfully.');
+      } else {
+        // Add mode - sign up via temp client
+        const password = container.querySelector('#student-password').value.trim();
+        if (password.length < 6) {
+          alert('Password must be at least 6 characters long.');
+          return;
+        }
+
+        const { data, error } = await tempSupabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: name,
+              role: 'student'
+            }
+          }
+        });
+
+        if (error) throw error;
+
+        // The handle_new_user database trigger automatically inserts the profiles row.
+        // We will fetch the created profile and update status & courses to match selections.
+        const newUserId = data.user?.id;
+        if (newUserId) {
+          await updateProfile(newUserId, {
+            status: status,
+            courses: assignedCourses
+          });
+        }
+        alert('Student registered and profile created successfully.');
+      }
+      studentModal.style.display = 'none';
+      await loadStudents();
+    } catch (err) {
+      alert('Error saving student profile: ' + err.message);
+    }
   });
 
   addAnnouncementBtn.addEventListener('click', () => {

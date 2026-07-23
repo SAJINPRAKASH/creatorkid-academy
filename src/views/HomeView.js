@@ -23,13 +23,13 @@ export async function render(container, { router }) {
     <!-- Main Content -->
     <main>
       <!-- Hero Section -->
-      <section class="hero items-center justify-center flex-col text-center" style="min-height: 70vh; display: flex; position: relative; overflow: hidden;">
+      <section class="hero">
         <div class="container animate-slide-up" style="position: relative; z-index: 10;">
-          <div class="badge" style="display: inline-block; padding: 4px 14px; background: rgba(124, 58, 237, 0.15); border-radius: 20px; color: var(--color-primary); margin-bottom: 1.5rem; font-weight: 600; border: 1px solid rgba(124, 58, 237, 0.4); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Signature Course Available</div>
-          <h1 class="text-gradient" style="max-width: 800px; margin: 0 auto; margin-bottom: 24px; font-size: clamp(2.5rem, 6vw, 4.5rem);">Master Photoshop.<br/>Unleash Creativity.</h1>
-          <p style="font-size: 1.15rem; max-width: 600px; margin: 0 auto 2.5rem; color: var(--color-text-muted);">The ultimate Photoshop course designed specifically for the next generation of digital artists. Bring your boldest ideas to life.</p>
+          <div class="hero-badge">Signature Course Available</div>
+          <h1 class="hero-title text-gradient">Master Photoshop.<br/>Unleash Creativity.</h1>
+          <p class="hero-description">The ultimate Photoshop course designed specifically for the next generation of digital artists. Bring your boldest ideas to life.</p>
           <div class="flex justify-center flex-wrap" style="gap: var(--spacing-md); margin-top: var(--spacing-lg);">
-            <a href="/login" class="btn btn-primary" id="hero-login-btn" style="padding: 1rem 2.5rem; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); text-decoration: none;">Student Login</a>
+            <a href="/login" class="btn btn-primary hero-btn" id="hero-login-btn">Student Login</a>
           </div>
         </div>
       </section>

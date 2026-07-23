@@ -97,13 +97,15 @@ export async function getCurrentProfile() {
   }
 
   // Fallback profile if record not yet populated
-  return profile || {
+  const result = profile || {
     id: user.id,
-    full_name: user.user_metadata?.full_name || user.email.split('@')[0],
-    email: user.email,
+    full_name: user.user_metadata?.full_name || (user.email || 'user').split('@')[0],
+    email: user.email || '',
     role: user.user_metadata?.role || 'student',
     avatar_url: user.user_metadata?.avatar_url || null,
   };
+  console.log('[DEBUG] Resolved profile:', result);
+  return result;
 }
 
 /**
@@ -117,6 +119,14 @@ export async function requireAuth(allowedRoles = ['student', 'admin']) {
   }
 
   const profile = await getCurrentProfile();
+
+  // Guard against suspended users
+  if (profile && profile.status === 'Suspended') {
+    alert('Your account has been suspended. Please contact the administrator.');
+    await logout();
+    return null;
+  }
+
   if (!profile || !allowedRoles.includes(profile.role)) {
     if (profile && profile.role === 'admin') {
       router.navigate('/admin');

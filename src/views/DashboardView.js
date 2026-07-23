@@ -29,6 +29,7 @@ export async function render(container, { router }) {
             </div>
             <button id="logout-btn" class="btn btn-secondary btn-sm">Logout</button>
           </div>
+          <button id="dash-menu-toggle" class="dash-menu-toggle">☰</button>
         </div>
       </nav>
 
@@ -73,19 +74,10 @@ export async function render(container, { router }) {
           </div>
         </div>
 
-        <!-- Overall Course Progress Card -->
-        <section class="progress-card">
-          <div class="progress-header">
-            <div>
-              <h3>Photoshop Masterclass Progress</h3>
-              <p id="completed-count-text">0 of 40 lessons completed</p>
-            </div>
-            <span class="percentage-badge" id="overall-percentage">0%</span>
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="overall-progress-bar" style="width: 0%;"></div>
-          </div>
-        </section>
+        <!-- Overall Course Progress Cards (Populated by JS) -->
+        <div id="course-progress-cards-container">
+          <div class="loading-spinner">Loading course progress...</div>
+        </div>
 
         <!-- Course Announcements Feed -->
         <div class="dash-widget">
@@ -97,6 +89,30 @@ export async function render(container, { router }) {
           </div>
         </div>
       </main>
+
+      <!-- Slide-out Drawer for Mobile -->
+      <div class="dash-drawer" id="dash-drawer">
+        <div class="drawer-header">
+          <img src="${logoImg}" alt="CreatorKid Academy" class="nav-logo" style="max-height: 32px; width: auto;" />
+          <button id="dash-drawer-close" class="drawer-close-btn">&times;</button>
+        </div>
+        <div class="drawer-content">
+          <div class="profile-pill-large">
+            <div class="user-avatar" id="drawer-user-avatar">A</div>
+            <div class="user-details">
+              <span class="user-name" id="drawer-user-name">Loading...</span>
+              <span class="user-role" id="drawer-user-role">STUDENT</span>
+            </div>
+          </div>
+          <div class="drawer-links">
+            <a href="/lesson" class="drawer-link">📚 Course Player</a>
+            <a href="/profile" class="drawer-link">👤 My Profile</a>
+            <a href="/change-password" class="drawer-link">🔑 Change Password</a>
+            <button id="drawer-logout-btn" class="drawer-link logout-link">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-overlay" id="drawer-overlay"></div>
     </div>
   `;
 
@@ -107,8 +123,16 @@ export async function render(container, { router }) {
   const userRoleBadge = container.querySelector('#user-role-badge');
   const logoutBtn = container.querySelector('#logout-btn');
 
+  // Populate Drawer Info
+  const drawerUserName = container.querySelector('#drawer-user-name');
+  const drawerUserAvatar = container.querySelector('#drawer-user-avatar');
+  const drawerUserRole = container.querySelector('#drawer-user-role');
+  const drawerLogoutBtn = container.querySelector('#drawer-logout-btn');
+
   if (navUserName) navUserName.textContent = profile.full_name;
+  if (drawerUserName) drawerUserName.textContent = profile.full_name;
   if (studentName) studentName.textContent = profile.full_name.split(' ')[0];
+  
   if (navUserAvatar) {
     if (profile.avatar_url) {
       navUserAvatar.innerHTML = `<img src="${profile.avatar_url}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`;
@@ -116,29 +140,69 @@ export async function render(container, { router }) {
       navUserAvatar.textContent = profile.full_name.charAt(0).toUpperCase();
     }
   }
+
+  if (drawerUserAvatar) {
+    if (profile.avatar_url) {
+      drawerUserAvatar.innerHTML = `<img src="${profile.avatar_url}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`;
+    } else {
+      drawerUserAvatar.textContent = profile.full_name.charAt(0).toUpperCase();
+    }
+  }
+
   if (userRoleBadge) userRoleBadge.textContent = profile.role.toUpperCase();
+  if (drawerUserRole) drawerUserRole.textContent = profile.role.toUpperCase();
 
   logoutBtn.addEventListener('click', async () => {
     await logout();
     router.navigate('/login');
   });
 
+  if (drawerLogoutBtn) {
+    drawerLogoutBtn.addEventListener('click', async () => {
+      closeDrawer();
+      await logout();
+      router.navigate('/login');
+    });
+  }
+
+  // Drawer toggling logic
+  const menuToggle = container.querySelector('#dash-menu-toggle');
+  const drawerClose = container.querySelector('#dash-drawer-close');
+  const drawer = container.querySelector('#dash-drawer');
+  const overlay = container.querySelector('#drawer-overlay');
+
+  const openDrawer = () => {
+    drawer.classList.add('open');
+    overlay.classList.add('active');
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    overlay.classList.remove('active');
+  };
+
+  if (menuToggle) menuToggle.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (overlay) overlay.addEventListener('click', closeDrawer);
+
   // Load student progress & announcements
-  await loadStudentProgress(profile.id, container);
+  await loadStudentProgress(profile, container);
   await loadAnnouncements(container);
 
-  return () => {};
+  return () => {
+    closeDrawer();
+  };
 }
 
-async function loadStudentProgress(userId, container) {
-  const completedText = container.querySelector('#completed-count-text');
-  const overallPercentage = container.querySelector('#overall-percentage');
-  const progressBarFill = container.querySelector('#overall-progress-bar');
-  const continueBtn = container.querySelector('#continue-learning-btn');
+async function loadStudentProgress(profile, container) {
+  const userId = profile.id;
+  const assignedCourses = profile.courses && profile.courses.length > 0 ? profile.courses : ['Photoshop Masterclass'];
 
+  const continueBtn = container.querySelector('#continue-learning-btn');
   const statCompleted = container.querySelector('#stat-completed-lessons');
   const statRemaining = container.querySelector('#stat-remaining-lessons');
   const statModule = container.querySelector('#stat-current-module');
+  const cardsContainer = container.querySelector('#course-progress-cards-container');
 
   try {
     const courseData = courseDataJson;
@@ -148,10 +212,6 @@ async function loadStudentProgress(userId, container) {
     const completedCount = records.filter(r => r.completed).length;
     const remainingCount = Math.max(0, totalLessonsCount - completedCount);
     const percentage = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
-
-    if (completedText) completedText.textContent = `${completedCount} of ${totalLessonsCount} lessons completed`;
-    if (overallPercentage) overallPercentage.textContent = `${percentage}%`;
-    if (progressBarFill) progressBarFill.style.width = `${percentage}%`;
 
     if (statCompleted) statCompleted.textContent = completedCount;
     if (statRemaining) statRemaining.textContent = remainingCount;
@@ -171,8 +231,43 @@ async function loadStudentProgress(userId, container) {
         }
       }
     }
+
+    // Render Progress Cards Dynamically
+    if (cardsContainer) {
+      cardsContainer.innerHTML = assignedCourses.map(course => {
+        let progressPercentage = 0;
+        let countText = '';
+        const isPhotoshop = course === 'Photoshop Masterclass' || course === 'Photoshop';
+
+        if (isPhotoshop) {
+          progressPercentage = percentage;
+          countText = `${completedCount} of ${totalLessonsCount} lessons completed`;
+        } else {
+          progressPercentage = 0;
+          countText = `Content coming soon!`;
+        }
+
+        return `
+          <section class="progress-card" style="margin-bottom: 1.5rem;">
+            <div class="progress-header">
+              <div>
+                <h3>${escapeHtml(course)} Progress</h3>
+                <p>${escapeHtml(countText)}</p>
+              </div>
+              <span class="percentage-badge">${progressPercentage}%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${progressPercentage}%;"></div>
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
   } catch (err) {
     console.error('Failed to load progress:', err);
+    if (cardsContainer) {
+      cardsContainer.innerHTML = `<p style="color: #fca5a5; font-size: 0.85rem; padding: 1.5rem 0;">Failed to load course progress.</p>`;
+    }
   }
 }
 

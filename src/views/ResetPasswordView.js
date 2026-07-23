@@ -16,7 +16,7 @@ export async function render(container, { router }) {
         <div class="step-indicator">
           <span class="step active" id="step1-badge">1. Email</span>
           <span class="step-line"></span>
-          <span class="step" id="step2-badge">2. Verification</span>
+          <span class="step" id="step2-badge">2. Email Link</span>
           <span class="step-line"></span>
           <span class="step" id="step3-badge">3. New Password</span>
         </div>
@@ -42,26 +42,16 @@ export async function render(container, { router }) {
           </form>
         </div>
 
-        <!-- Step 2: Verification Code -->
-        <div id="step-2-container" style="display: none;">
+        <!-- Step 2: Check Email Instruction -->
+        <div id="step-2-container" style="display: none; text-align: center; padding: 1rem 0;">
+          <div class="success-icon" style="font-size: 3rem; margin-bottom: 1rem; color: #a78bfa; display: inline-block;">✉️</div>
           <div class="card-header">
             <h2>Check Your Email</h2>
-            <p id="otp-sent-text">We sent a recovery link to your email.</p>
+            <p id="otp-sent-text" style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5;">We sent a password recovery link to your email. Click the link in the email to set your new password.</p>
           </div>
-
-          <form id="step-2-form">
-            <div id="alert-step2" class="alert-box" style="display: none;"></div>
-
-            <div class="otp-inputs">
-              <input type="text" maxlength="1" class="otp-box" autofocus />
-              <input type="text" maxlength="1" class="otp-box" />
-              <input type="text" maxlength="1" class="otp-box" />
-              <input type="text" maxlength="1" class="otp-box" />
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Verify Code</button>
-            <div class="resend-text">Didn't receive code? <button type="button" id="resend-btn" class="text-btn">Resend OTP</button></div>
-          </form>
+          <div class="resend-text" style="margin-top: 1.5rem; color: var(--color-text-muted); font-size: 0.9rem;">
+            Didn't receive the email? <button type="button" id="resend-btn" class="text-btn" style="color: var(--color-primary); background: none; border: none; font-weight: 600; cursor: pointer; padding: 0;">Resend Link</button>
+          </div>
         </div>
 
         <!-- Step 3: Set New Password -->
@@ -121,11 +111,9 @@ export async function render(container, { router }) {
   const step3Badge = container.querySelector('#step3-badge');
 
   const step1Form = container.querySelector('#step-1-form');
-  const step2Form = container.querySelector('#step-2-form');
   const step3Form = container.querySelector('#step-3-form');
 
   const alertStep1 = container.querySelector('#alert-step1');
-  const alertStep2 = container.querySelector('#alert-step2');
   const alertStep3 = container.querySelector('#alert-step3');
 
   const resetEmail = container.querySelector('#reset-email');
@@ -177,18 +165,25 @@ export async function render(container, { router }) {
     }
   });
 
-  // Step 2: Verification step
-  step2Form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    showAlert(alertStep2, 'Moving to password reset...', 'success');
-    setTimeout(() => {
-      step2Container.style.display = 'none';
-      step3Container.style.display = 'block';
-      step2Badge.className = 'step completed';
-      step3Badge.className = 'step active';
-      newPassword.focus();
-    }, 600);
-  });
+  // Step 2: Resend Link click handler
+  const resendBtn = container.querySelector('#resend-btn');
+  if (resendBtn) {
+    resendBtn.addEventListener('click', async () => {
+      const email = resetEmail.value.trim();
+      if (!email) return;
+      resendBtn.textContent = 'Sending...';
+      resendBtn.disabled = true;
+      try {
+        await requestPasswordReset(email);
+        alert('Reset link resent successfully!');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        resendBtn.textContent = 'Resend Link';
+        resendBtn.disabled = false;
+      }
+    });
+  }
 
   // Password Strength Indicator
   newPassword.addEventListener('input', () => {
