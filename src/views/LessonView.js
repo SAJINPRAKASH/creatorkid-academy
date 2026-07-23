@@ -322,7 +322,10 @@ export async function render(container, { params, router }) {
     const encodedFolder = folder.split('/').map(part => encodeURIComponent(part)).join('/');
     const encodedFile = encodeURIComponent(filename);
     const baseUrl = R2_BUCKET_BASE_URL.endsWith('/') ? R2_BUCKET_BASE_URL : R2_BUCKET_BASE_URL + '/';
-    const videoUrl = `${baseUrl}${encodedFolder}/${encodedFile}`;
+    
+    // Cache buster added to force fresh pull of new videos from R2, ignoring old cached versions
+    const cacheVersion = 'v=2'; 
+    const videoUrl = `${baseUrl}${encodedFolder}/${encodedFile}?${cacheVersion}`;
 
     loadingOverlay.style.display = 'flex';
     player.src = videoUrl;
