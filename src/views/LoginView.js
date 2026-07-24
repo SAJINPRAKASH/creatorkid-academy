@@ -15,13 +15,8 @@ export async function render(container, { router }) {
 
       <div class="login-card">
         <div class="card-header">
-          <h2 id="card-title">Welcome Back</h2>
-          <p id="card-subtitle">Log in to access your courses and learning portal</p>
-        </div>
-
-        <div class="role-selector">
-          <button type="button" class="role-btn active" data-role="student">Student Login</button>
-          <button type="button" class="role-btn" data-role="admin">Admin Portal</button>
+          <h2>Welcome Back</h2>
+          <p>Log in with your account credentials</p>
         </div>
 
         <form id="login-form" class="login-form">
@@ -30,7 +25,7 @@ export async function render(container, { router }) {
           <div class="form-group">
             <label for="email">Email Address</label>
             <div class="input-wrapper">
-              <input type="email" id="email" placeholder="student@creatorkid.com" required />
+              <input type="email" id="email" placeholder="your@email.com" required />
             </div>
           </div>
 
@@ -51,7 +46,7 @@ export async function render(container, { router }) {
             </label>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Sign In to Student Portal</button>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Sign In</button>
         </form>
 
         <div class="card-footer">
@@ -61,38 +56,11 @@ export async function render(container, { router }) {
     </div>
   `;
 
-  const roleBtns = container.querySelectorAll('.role-btn');
-  const cardTitle = container.querySelector('#card-title');
-  const cardSubtitle = container.querySelector('#card-subtitle');
   const submitBtn = container.querySelector('#submit-btn');
   const loginForm = container.querySelector('#login-form');
   const emailInput = container.querySelector('#email');
   const passwordInput = container.querySelector('#password');
   const alertBox = container.querySelector('#alert-box');
-
-  let currentRole = 'student';
-
-  // Role toggle
-  roleBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      roleBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentRole = btn.dataset.role;
-
-      if (currentRole === 'admin') {
-        cardTitle.textContent = 'Admin Portal';
-        cardSubtitle.textContent = 'Sign in to manage students and course access';
-        submitBtn.textContent = 'Sign In to Admin Dashboard';
-        emailInput.placeholder = 'admin@creatorkid.com';
-      } else {
-        cardTitle.textContent = 'Welcome Back';
-        cardSubtitle.textContent = 'Log in to access your courses and learning portal';
-        submitBtn.textContent = 'Sign In to Student Portal';
-        emailInput.placeholder = 'student@creatorkid.com';
-      }
-      hideAlert();
-    });
-  });
 
   // Handle Form Submission
   const handleFormSubmit = async (e) => {
@@ -111,7 +79,7 @@ export async function render(container, { router }) {
 
     try {
       const result = await loginWithEmail(email, password);
-      const userRole = result.profile?.role || currentRole;
+      const userRole = result.profile?.role || 'student';
 
       showAlert('Authentication successful! Redirecting...', 'success');
 
@@ -124,7 +92,7 @@ export async function render(container, { router }) {
       }, 600);
     } catch (err) {
       showAlert(err.message, 'error');
-      submitBtn.textContent = currentRole === 'admin' ? 'Sign In to Admin Dashboard' : 'Sign In to Student Portal';
+      submitBtn.textContent = 'Sign In';
       submitBtn.disabled = false;
     }
   };

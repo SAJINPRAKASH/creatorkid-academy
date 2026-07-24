@@ -45,9 +45,9 @@ export async function render(container, { router }) {
                 <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Photoshop Masterclass</h2>
                 <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--color-text-muted);">Go from absolute beginner to digital artist. Learn layers, masking, compositing, typography, and advanced retouching techniques in this comprehensive 6-week journey.</p>
                 <ul style="list-style: none; margin-bottom: 2.5rem; color: var(--color-text);">
-                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> 40+ HD Video Lessons</li>
+                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> 80+ HD Video Lessons</li>
                   <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Downloadable Project Files</li>
-                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Certificate of Completion</li>
+                  <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Portfolio Live Tutorial</li>
                   <li style="display: flex; align-items: center; gap: 10px;"><span style="color: var(--color-accent); font-weight: bold;">✓</span> Lifetime Access</li>
                 </ul>
                 <div class="flex wrap" style="gap: 1.5rem; align-items: center;">
